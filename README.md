@@ -59,6 +59,9 @@ http://localhost:8083/user/auth/users/
 # Get token user
 http://localhost:8083/user/get-token/
 
+# Login to get token user
+http://localhost:8083/user/login/
+
 # Get refresh token & access token: djoser endpoints
 http://localhost:8083/user/auth/jwt/create/
 
