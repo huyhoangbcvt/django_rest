@@ -10,7 +10,6 @@ app_name = 'user'
 
 user_list = views_auth.UserViewSet.as_view({
     'get': 'list',
-    # 'post': 'create'
 })
 profile_list = views_auth.ProfileViewSet.as_view({
     'get': 'list',
@@ -43,25 +42,19 @@ router.register(r'groups', views_auth.GroupViewSet, basename="user_group_list")
 
 # If not register ViewSet, it only to see urls detail
 urlpatterns = [
+    path('', include(router.urls)),
     # path('<int:pk>/', views_auth.UserDetail.as_view()),
     # path('', views_auth.index, name='index'),
-    path('', include(router.urls)),
     # path('users/', user_list, name='user_list'),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # djoser endpoints: Django REST framework # Create account in jwt
-    # path('auth/', include('djoser.urls')),  # Create account: /user/auth/users/
+    path('auth/', include('djoser.urls')),  # Create account: /user/auth/users/
     # get access & refresh token in jwt
-    # path('auth/', include('djoser.urls.jwt')),  # Login auth Headers: /user/auth/jwt/create/
+    path('auth/', include('djoser.urls.jwt')),  # Login auth Headers: /user/auth/jwt/create/
     path('get-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # Để cấp mới access token với refresh token, ta thực hiện POST request
     path('refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
     path('sign-up/', views_auth.register, name='sign_up'),
-    # path("login/", views_auth.CustomAuthToken.as_view(), name="login"),
-    # # path('accounts/login/', views_auth.LoginView.as_view(), name="login_view_api"),
-    # path('accounts/login/', LoginView.as_view(
-    #             form_class=form_auth.LoginForm,
-    #             template_name='login.html',
-    #             extra_context={'next': '/'},
-    #             success_url='/',
-    #     ), name="login_view_api"),
+    path("login/", views_auth.CustomAuthToken.as_view(), name="login"),
+
 ]
