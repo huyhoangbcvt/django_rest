@@ -43,13 +43,13 @@ def QuerySet_GetCategoryInfo(request):
 @transaction.atomic()
 @permission_classes([IsAuthenticated])
 def AddCategory(request):
-    print('_________________vao 12 add AddCategory')
+    print('________vao 12 add AddCategory')
     # Get data from post request
     data = request.data
     user = request.user
     print(data)
     # data['user'] = user.id
-    print(data['product_map'])
+    # print(data['product_map'])
     # use Serializer to deserialize data
     serializer = CategoryAddSerializer(data=data)
     print(serializer)
