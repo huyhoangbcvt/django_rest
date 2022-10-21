@@ -43,6 +43,11 @@ class Category(models.Model):
         # return f"{self.title}, {self.image}, {self.body}, {self.user}"
 
 
+# Run update_middle() after the end of the save() method
+# update_middle
+# post_save: Gửi signal khi kết thúc hàm save()
+# sender=Category: chỉ nhận signal từ Middle Model
+# instance: instance được lưu
 # @receiver(post_save, sender=Category)
 # # @on_transaction_commit
 # def update_middle(sender, instance, created, **kwargs):
