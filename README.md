@@ -38,9 +38,41 @@ http://localhost:8083/
 # Run user
 http://localhost:8083/user/
 
+http://localhost:8083/catalog/
+
 # Run admin site
 http://localhost:8083/admin/
 
-# if APIs
-http://localhost:8083/user/all-accounts
+# APIs
+# Groups
+http://localhost:8083/user/groups/
 
+# Register
+http://localhost:8083/user/sign-up/
+
+# List users
+http://localhost:8083/user/users/
+
+# Register: djoser endpoints
+http://localhost:8083/user/auth/users/
+
+# Get token user
+http://localhost:8083/user/get-token/
+
+# djoser endpoints
+http://localhost:8083/user/auth/jwt/create/
+
+# Get refresh token & access token
+http://localhost:8083/user/refresh-token/
+
+# category list
+http://localhost:8083/catalog/category/
+
+# category add
+http://localhost:8083/catalog/category/add/?role=Guess&username=it.hoanghh
+
+# product list
+http://localhost:8083/catalog/product/
+
+# product add
+http://localhost:8083/catalog/product/add/?role=Guess&username=it.hoanghh
