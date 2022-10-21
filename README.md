@@ -35,7 +35,7 @@ python manage.py runserver localhost:8083
 # Run on browser
 http://localhost:8083/
 
-# Run user
+# Run user & catalog
 http://localhost:8083/user/
 
 http://localhost:8083/catalog/
