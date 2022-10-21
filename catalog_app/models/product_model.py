@@ -37,9 +37,23 @@ class Product(models.Model):
     #     return u"%s" % self.user
 
     class Meta:
-        ordering = ['created_at', 'p_name']
         managed = True
+        ordering = ['created_at', 'p_name']
         db_table = 'catalog_product'
         verbose_name = 'catalog_product'
         verbose_name_plural = 'catalog_products'
 
+
+# class Middleship(models.Model):
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     date_joined = models.DateField(null=True, default=datetime.now)
+#
+#     def __str__(self):
+#         return "{}_{}".format(self.Product.__str__(), self.Category.__str__())
+#
+#     class Meta:
+#         managed = True
+#         db_table = 'middleship_product_category'
+#         verbose_name = 'middleship_product_category'
+#         verbose_name_plural = 'middleship_product_categories'

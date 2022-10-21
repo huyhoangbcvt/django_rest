@@ -44,9 +44,15 @@ class ProductInfoViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(active=True).order_by('created_at')
     serializer_class = ProductSerializer
 
-    # @action(methods=['POST'], detail=True)
-    # def GetProductInfo(self, request):
-    #     return product_ws.GetProductInfo(request)
+    @action(methods=['POST'], detail=True)
+    def update_product(self, request, pk):
+        print('Class ViewSet [POST]: UpdateProduct pk = ', pk)
+        return product_ws.UpdateProduct(request, pk)
+
+    def get(self, request, pk, *args, **kwargs):
+        # queryset = Product.objects.filter(id=pk, user_id=request.user.id, active=True)
+        print('Class ViewSet [GET] for /catalog/product/' + pk + '/update_product/')
+        return product_ws.GetProductInfoDetail(request, pk)
 
 
 class CreateProduct(CreateModelMixin, GenericAPIView):

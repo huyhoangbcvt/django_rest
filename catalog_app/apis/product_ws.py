@@ -23,13 +23,37 @@ from ..models.product_model import Product
 @permission_classes([IsAuthenticated])
 def GetProductInfo(request):
     user = request.user
-    print(user.username)
     # Get Product info from database # Product.objects.all()
     product_info = Product.objects.filter(user_id=user.id, active=True).order_by(F('created_at').desc(nulls_last=True))
     # Using Serializer to convert data
     # Set many=True to serializer queryset or list of objects instead of a single object instance, context={'request':request}
     product_serializer = ProductSerializer(product_info, many=True)
     return Response(product_serializer.data)
+
+
+@permission_classes([IsAuthenticated])
+def GetProductInfoDetail(request, pk):
+    user = request.user
+    # Get Product info from database # Product.objects.all()
+    product_info = Product.objects.filter(id=pk, user_id=user.id, active=True).order_by(F('created_at').desc(nulls_last=True))
+    # Using Serializer to convert data
+    # Set many=True to serializer queryset or list of objects instead of a single object instance, context={'request':request}
+    product_serializer = ProductSerializer(product_info, many=True)
+    return Response(product_serializer.data)
+
+
+@permission_classes([IsAuthenticated])
+def UpdateProduct(request, pk):
+    try:
+        user = request.user
+        # Get Category info from database # Category.objects.all()
+        product_obj = Product.objects.get(id=pk, user_id=user.id, active=True)
+        product_obj.active = False
+        product_obj.save()
+    except UpdateProduct.DoesNotExists:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(ProductSerializer(product_obj).data, status=status.HTTP_200_OK)
 
 
 # @transaction.non_atomic_requests

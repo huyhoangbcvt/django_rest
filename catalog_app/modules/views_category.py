@@ -24,9 +24,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-# @authentication_classes([TokenAuthentication])
-# @renderer_classes([JSONRenderer])
+# @authentication_classes([TokenAuthentication]) # @renderer_classes([JSONRenderer])
 def GetCategoryInfo(request):
+    print('Func GET: GetCategoryInfo')
     return category_ws.GetCategoryInfo(request)
 
 
@@ -35,7 +35,7 @@ def GetCategoryInfo(request):
 # @authentication_classes([TokenAuthentication])
 @csrf_exempt
 def AddCategory(request):
-    print('________________________________vao 11 add AddCategory')
+    print('Func POST: AddCategory')
     return category_ws.AddCategory(request)
 
 
@@ -47,14 +47,13 @@ class CategoryInfoViewSet(viewsets.ModelViewSet):
     charset = 'UTF-8'
 
     @action(methods=['POST'], detail=True)
-    def add(self, request):
-        print(request)
-        # return category_ws.AddCategory(request)
-        return Response(status=status.HTTP_201_CREATED)
+    def update_category(self, request, pk):
+        print('Class ViewSet [POST]: UpdateCategory pk = ', pk)
+        return category_ws.UpdateCategory(request, pk)
 
-    def get(self, request, *args, **kwargs):
-        # price_lte = request.GET['price_lte']
-        print(self.request.user)
+    def get(self, request, pk, *args, **kwargs):
+        print('Class ViewSet [GET] for /catalog/category/'+pk+'/update_category/')
+        return category_ws.GetCategoryInfoDetail(request, pk)
 
 
 class CreateCategory(CreateModelMixin, GenericAPIView):

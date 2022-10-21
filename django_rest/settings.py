@@ -91,8 +91,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),      # Expire token
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1), # Expire to refresh token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),       # Expire token
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Expire to refresh token
 }
 
 ROOT_URLCONF = 'django_rest.urls'
