@@ -68,14 +68,14 @@ http://localhost:8083/user/auth/jwt/create/
 # Get refresh token & access token
 http://localhost:8083/user/refresh-token/
 
-# category list
+# Categories list
 http://localhost:8083/catalog/category/
 
-# category add
+# Category add
 http://localhost:8083/catalog/category/add/?role=Guess&username=it.hoanghh
 
-# product list
+# Products list
 http://localhost:8083/catalog/product/
 
-# product add
+# Product add
 http://localhost:8083/catalog/product/add/?role=Guess&username=it.hoanghh
