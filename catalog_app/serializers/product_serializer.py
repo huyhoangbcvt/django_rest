@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from ..models.product_model import Product
+# from ..models.product_model import Product
+from ..models.catalog_model import (Product, Category)
 from ..serializers.category_serializer import CategorySerializer
 from user_app.serializers.user_serializer import UserSerializer
 
@@ -11,15 +12,15 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         # fields = '__all__'
-        fields = ['id', 'p_name', 'p_code', 'p_image', 'p_description', 'p_country', 'active', 'user', 'categories']
+        fields = ['id', 'name', 'code', 'image', 'description', 'country', 'active', 'user', 'category']
 
 
 class ProductAddSerializer(serializers.ModelSerializer):
     # categories = serializers.PrimaryKeyRelatedField(queryset=Product.objects.prefetch_related('catalog_products'))
     user = UserSerializer
-    categories = CategorySerializer
+    category = CategorySerializer
 
     class Meta:
         model = Product
         # fields = '__all__'
-        fields = ['p_name', 'p_code', 'p_image', 'p_description', 'p_country', 'user', 'categories']
+        fields = ['name', 'code', 'image', 'description', 'country', 'user', 'category']

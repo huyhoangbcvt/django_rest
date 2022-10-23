@@ -15,13 +15,14 @@ from pathlib import Path
 import os
 from os.path import join
 from datetime import timedelta
+
 # from Tools.scripts.win_add2path import DEFAULT
 # from django.core.wsgi import get_wsgi_application
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATE_INPUT_FORMATS = ('%d/%m/%Y','%d-%m-%Y','%Y-%m-%d')
+DATE_INPUT_FORMATS = ('%d/%m/%Y', '%d-%m-%Y', '%Y-%m-%d')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -34,7 +35,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,17 +45,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'corsheaders', #connect secure header
+    'corsheaders',  # connect secure header: browser & server allow
     # 'inspectdb_refactor',
-    'djoser',                       # third party package for user registration and authentication endpoints
-    'rest_framework',               # rest API implementation library for django
-    'rest_framework_simplejwt',     # JWT authentication backend library
+    # Error: swagger drf_yasg duplicate if using djoser
+    # 'djoser',                       # third party package for user registration and authentication endpoints
+    'rest_framework',  # rest API implementation library for django
+    'rest_framework_simplejwt',  # JWT authentication backend library
     # 'storages',  #S3-AWS
     'rest_framework.authtoken',  # TokenAuthentication
+    # 'oauth2_provider',
 
-    'django.contrib.humanize', #Format number: 4500000 becomes 4,500,000 | 4500.2 becomes 4,500.2 | 450000 becomes '450.000'
-    'user_app',    #modules 1
-    'catalog_app', #modules 2
+    'django.contrib.humanize',
+    # Format number: 4500000 becomes 4,500,000 | 4500.2 becomes 4,500.2 | 450000 becomes '450.000'
+    'user_app',  # modules 1
+    'catalog_app',  # modules 2
+    'debug_toolbar',
+    'ckeditor',
+    'ckeditor_uploader',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -68,17 +75,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'corsheaders.middleware.CorsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # Only using when debug=True
+]
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    'dev.hd.com.vn',
+    # ...
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # Tạo JWT và xác thực quyền truy cập
-        'rest_framework_simplejwt.authentication.JWTAuthentication', # ACCESS_TOKEN_LIFETIME
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # ACCESS_TOKEN_LIFETIME
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',   # Basic Auth
+        'rest_framework.authentication.BasicAuthentication',  # Basic Auth
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated', # Need Authorization Headers
+        'rest_framework.permissions.IsAuthenticated',  # Need Authorization Headers
         # If not specified, this setting defaults to allowing unrestricted access:
         # 'rest_framework.permissions.AllowAny',
     ],
@@ -90,8 +105,18 @@ REST_FRAMEWORK = {
     ],
 }
 
+# CORS_ORIGIN_ALLOW_ALL = True  # False not allow
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8083",
+    "http://dev.hd.com.vn:8083",
+]
+# CORS_ALLOWED_METHODS = [
+#     "GET", "POST", "PUT", "PATCH",
+# ]
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),       # Expire token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Expire token
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Expire to refresh token
 }
 
@@ -108,7 +133,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media', #Setup cho view {{ MEDIA_URL }}
+                'django.template.context_processors.media',  # Setup cho view {{ MEDIA_URL }}
             ],
         },
     },
@@ -116,22 +141,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_rest.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_template_practice1',
+        'NAME': 'django_rest_template',
         'USER': 'postgres',
         'PASSWORD': 'laptrinh123456',
         'HOST': 'localhost',
         'PORT': '5433',
-        'ATOMIC_REQUESTS': True, # transactional db
+        'ATOMIC_REQUESTS': True,  # transactional db
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -151,11 +174,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'vi' #default language
+LANGUAGE_CODE = 'vi'  # default language
 LANGUAGES = (
     ('vi', 'Vietnamese'),
     ('en', 'English'),
@@ -168,19 +190,36 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = '/static/' #static/
+STATIC_URL = '/static/'  # static/
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # =================| Root media Configuration |======================
-MEDIA_URL = "/media/"  #Kết hợp vs django.template.context_processors.media
+MEDIA_URL = "/media/"  # Kết hợp vs django.template.context_processors.media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(STATIC_ROOT, 'static/media')
+
+# =======| CKEditor settings |=========
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+# This ensures you have all toolbar icons
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None,
+    },
+}
+# -----------------------------------------
+# CKEDITOR_UPLOAD_PATH = os.path.join(MEDIA_ROOT, 'uploads')
+# CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+# CKEDITOR_MEDIA_PREFIX  = "/media/ckeditor/"
+# CKEDITOR_UPLOAD_PREFIX = "http://fortezzeimperiali/media/uploads/"
+# CKEDITOR_RESTRICT_BY_USER = True
+# CKEDITOR_IMAGE_BACKEND = "pillow"
 
 # Upload Handlers
 FILE_UPLOAD_HANDLERS = [
@@ -193,15 +232,15 @@ FILE_UPLOAD_HANDLERS = [
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
-DEFAULT_FROM_EMAIL  = 'no_reply@'
-SERVER_EMAIL        = 'no_reply@'
-ADMINS              = [('', SERVER_EMAIL), ]
-MANAGERS            = ADMINS
-EMAIL_HOST          = '' #'smtp.gmail.com' #MAIL_SERVER
-EMAIL_HOST_USER     = SERVER_EMAIL
+DEFAULT_FROM_EMAIL = 'no_reply@'
+SERVER_EMAIL = 'no_reply@'
+ADMINS = [('', SERVER_EMAIL), ]
+MANAGERS = ADMINS
+EMAIL_HOST = ''  # 'smtp.gmail.com' #MAIL_SERVER
+EMAIL_HOST_USER = SERVER_EMAIL
 EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT          = 587
-EMAIL_USE_TLS       = True
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -224,7 +263,7 @@ LOGGING = {
         'file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log', #join(BASE_DIR, 'my_logs', 'debug.log'),
+            'filename': 'debug.log',  # join(BASE_DIR, 'my_logs', 'debug.log'),
             'formatter': 'verbose'
         },
         'mail_admins': {

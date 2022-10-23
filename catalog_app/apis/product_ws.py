@@ -16,7 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from user_app.models.account_model import Profile
 from ..serializers.product_serializer import ProductSerializer, ProductAddSerializer
-from ..models.product_model import Product
+# from ..models.product_model import Product
+from ..models.catalog_model import (Product, Category)
 
 
 # Create your views here.

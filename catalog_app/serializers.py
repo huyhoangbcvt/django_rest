@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from user_app.models.account_model import Profile
-from .models.category_model import Category
-from .models.product_model import Product
+# from .models.category_model import Category
+# from .models.product_model import Product
+from .models.catalog_model import (Product, Category)
 
 
 class User_appSerializer(serializers.ModelSerializer):

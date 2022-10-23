@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth import login, logout
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, status, viewsets, permissions, renderers
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.mixins import CreateModelMixin
@@ -18,7 +18,8 @@ from rest_framework.renderers import JSONRenderer
 # from django_filter import FilterSet
 from ..apis import category_ws
 from ..serializers.category_serializer import CategorySerializer
-from ..models.category_model import Category
+# from ..models.category_model import Category
+from ..models.catalog_model import (Product, Category)
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -45,6 +46,19 @@ class CategoryInfoViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.filter(active=True).order_by('created_at')
     serializer_class = CategorySerializer
     charset = 'UTF-8'
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def filter_queryset(self, queryset):
+        # queryset = self.queryset.filter(username=request.data.username)
+        _id = self.request.user.id
+        if _id:
+            queryset = self.queryset.filter(user_id=_id)
+            return queryset
+        return self.queryset
 
     @action(methods=['POST'], detail=True)
     def update_category(self, request, pk):

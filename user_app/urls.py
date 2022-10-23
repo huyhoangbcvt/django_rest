@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, re_path, include, reverse
 from .modules import views_auth, form_auth
 from rest_framework import viewsets
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -38,23 +38,14 @@ router = routers.DefaultRouter()
 router.register(r'users', views_auth.UserViewSet, basename="user_list")
 router.register(r'profiles', views_auth.ProfileViewSet, basename="profile_list")
 router.register(r'groups', views_auth.GroupViewSet, basename="user_group_list")
-# router.register(r'users/<int:pk>', views_auth.UserDetail, basename="user_detail")
 
 # If not register ViewSet, it only to see urls detail
 urlpatterns = [
-    path('', include(router.urls)),
-    # path('<int:pk>/', views_auth.UserDetail.as_view()),
-    # path('', views_auth.index, name='index'),
-    # path('users/', user_list, name='user_list'),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # djoser endpoints: Django REST framework # Create account in jwt
-    path('auth/', include('djoser.urls')),  # Create account: /user/auth/users/
-    # get access & refresh token in jwt
-    path('auth/', include('djoser.urls.jwt')),  # Login auth Headers: /user/auth/jwt/create/
-    path('get-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path(r'api/', include(router.urls)),
+    path(r'api/get-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # Để cấp mới access token với refresh token, ta thực hiện POST request
-    path('refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('sign-up/', views_auth.register, name='sign_up'),
-    path("login/", views_auth.CustomAuthToken.as_view(), name="login"),
+    path(r'api/refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
+    path(r'api/sign-up/', views_auth.register, name='sign_up'),
+    path(r"api/login/", views_auth.CustomAuthToken.as_view(), name="login"),
 
 ]

@@ -17,7 +17,8 @@ from ..util.error_code import ErrorInCode
 
 from user_app.models.account_model import Profile
 from ..serializers.category_serializer import CategorySerializer, CategoryAddSerializer
-from ..models.category_model import Category, SaveSignalHandlingModel
+# from ..models.category_model import Category, SaveSignalHandlingModel
+from ..models.catalog_model import (Product, Category)
 
 
 # Create your views here.
@@ -83,8 +84,8 @@ def AddCategory(request):
         # Save the data to database # serializer.save()
         try:
             category_save = serializer.save()
-            product_id = data['product_map']
-            category_id = category_save.id
+            # product_id = data['product_map']
+            # category_id = category_save.id
             # update_fields = (product_id, category_id)
             # SaveSignalHandlingModel.save_base(update_fields=update_fields)
             # instance = Middleship(

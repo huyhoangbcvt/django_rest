@@ -15,7 +15,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import OrderingFilter, SearchFilter
 # from django_filter import FilterSet
-from ..models.product_model import Product
+# from ..models.product_model import Product
+from ..models.catalog_model import (Product, Category)
 from ..apis import product_ws
 from ..serializers.product_serializer import ProductSerializer
 import json
@@ -23,7 +24,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 # @authentication_classes([TokenAuthentication])
 def GetProductInfo(request):
     return product_ws.GetProductInfo(request)
@@ -44,6 +45,19 @@ class ProductInfoViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(active=True).order_by('created_at')
     serializer_class = ProductSerializer
 
+    def get_permissions(self):
+        if self.action == 'list':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def filter_queryset(self, queryset):
+        # queryset = self.queryset.filter(username=request.data.username)
+        _id = self.request.user.id
+        if _id:
+            queryset = self.queryset.filter(user_id=_id)
+            return queryset
+        return self.queryset
+
     @action(methods=['POST'], detail=True)
     def update_product(self, request, pk):
         print('Class ViewSet [POST]: UpdateProduct pk = ', pk)
@@ -52,6 +66,8 @@ class ProductInfoViewSet(viewsets.ModelViewSet):
     def get(self, request, pk, *args, **kwargs):
         # queryset = Product.objects.filter(id=pk, user_id=request.user.id, active=True)
         print('Class ViewSet [GET] for /catalog/product/' + pk + '/update_product/')
+        from pprint import pprint;
+        pprint(self.serializer_class)
         return product_ws.GetProductInfoDetail(request, pk)
 
 

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from ..models.category_model import Category
-from ..models.product_model import Product
+# from ..models.category_model import Category
+# from ..models.product_model import Product
+from ..models.catalog_model import (Product, Category)
 from django import forms
 from user_app.serializers.user_serializer import UserSerializer
 from django.contrib.auth.models import User
@@ -14,19 +15,20 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         # fields = '__all__'
-        fields = ['id', 'title', 'code', 'image', 'content', 'active', 'user']
+        fields = ['id', 'code', 'image', 'content', 'active', 'user']
 
 
 class CategoryAddSerializer(serializers.ModelSerializer):
     # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     # product_map = serializers.StringRelatedField(read_only=True)
     user = UserSerializer
-    product_map = forms.ModelChoiceField(
-        queryset=Product.objects.all(),
-        widget=forms.Select
-    )
+    # product_map = forms.ModelChoiceField(
+    #     queryset=Product.objects.all(),
+    #     widget=forms.Select
+    # )
+    # product = ProductSerializer
 
     class Meta:
         model = Category
         # fields = '__all__'
-        fields = ['title', 'code', 'image', 'content', 'user']
+        fields = ['name', 'code', 'image', 'content', 'user', 'product']

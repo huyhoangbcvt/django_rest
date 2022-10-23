@@ -24,3 +24,5 @@ djangorestframework-oauth==1.1.0
 djangorestframework_simplejwt==5.2.1
 django-filter==22.1
 # djangorestframework-xml==2.0.0
+drf-yasg==1.21.4
+django-ckeditor==6.5.1

@@ -70,14 +70,38 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated] # Basic Auth
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by('-date_joined')
+    swagger_schema = None
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def filter_queryset(self, queryset):
+        # queryset = self.queryset.filter(username=request.data.username)
+        _id = self.request.user.id
+        print('filter_queryset', _id)
+        if _id:
+            queryset = self.queryset.filter(id=_id)
+            return queryset
+        return self.queryset
+
+    # def get_queryset(self):
+    #     # username = self.request.query_params.get('username', None)
+    #     username = self.request.user.username
+    #     _id = self.request.user.id
+    #     print('get_queryset', _id, username)
+    #     queryset = self.queryset  # self.UserSerializer.Meta.User.objects.all()
+    #     queryset = queryset.filter(id=_id)  # is_active=active
+    #     return queryset
 
     # @action(methods=['GET'], detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    @action(methods=['GET'], detail=True)
-    def get_user(self, request):
-        print('vao')
-        # snippet = self.get_object()
-        # return Response(snippet.highlighted)
-        pass
+    # @action(methods=['POST'], detail=True)
+    # def add(self, request):
+    #     # snippet = self.get_object()
+    #     # return Response(snippet.highlighted)
+    #     return register(request)
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
@@ -93,7 +117,7 @@ class UserDetail(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]  # Basic Auth
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by('-date_joined')
-
+    # swagger_schema = None
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -103,6 +127,18 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    # def list(self, request, *args, **kwargs):
+    #     serializer = GroupSerializer(Group.objects.all())
+    #     return Response(serializer.data)
+
+    # def get_extra_actions(self, request):
+    #     return None
 
 
 # class HomeViewSet(viewsets.ModelViewSet):
@@ -130,7 +166,18 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 def index_userapp(request):
     print('User APIs: Run ok')
-    return redirect('user/')
+    # return redirect('user/')
+    if request.user.is_authenticated:
+        return HttpResponse('Webcome to HDWebshoft')
+    return render(request, "index.html",
+                  {
+                      'title': "Index page",
+                      # 'next':'/home/',
+                      'content': "Example app page for Django.",
+                      'year': datetime.now().year,
+                      'design': "Hà Huy Hoàng"
+                  }
+                  )
 
 
 def index(request):
