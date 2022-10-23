@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth import login, logout
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, status, viewsets, permissions, renderers
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.mixins import CreateModelMixin
