@@ -48,8 +48,8 @@ urlpatterns = [
     path(r'user/', include("user_app.urls")),
     path(r'catalog/', include("catalog_app.urls")),
 
-    re_path('^django/ckeditor/', include('ckeditor_uploader.urls')),
-    re_path('^django/swagger(?P<format>\.json\.yaml)$', schema_view.with_ui(cache_timeout=0), name='schema-json'),
-    re_path('^django/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
-    re_path('^django/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    re_path('^api/ckeditor/', include('ckeditor_uploader.urls')),
+    re_path('^api/swagger(?P<format>\.json\.yaml)$', schema_view.with_ui(cache_timeout=0), name='schema-json'),
+    re_path('^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
+    re_path('^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
